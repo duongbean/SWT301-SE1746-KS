@@ -33,71 +33,91 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             HttpSession session = request.getSession();
             String service = request.getParameter("service");
             if (service == null) {
                 service = "listAll";
             }
-            if (service.equals("listAll")) {
-                request.getRequestDispatcher("showcart.jsp").forward(request, response);
+
+            switch (service) {
+                case "listAll":
+                    handleListAll(request, response);
+                    break;
+                case "addCart":
+                    handleAddCart(request, session, response);
+                    break;
+                case "update":
+                    handleUpdate(request, session, response);
+                    break;
+                case "remove":
+                    handleRemove(request, session, response);
+                    break;
+                default:
+                    // Handle invalid service
+                    break;
             }
-            if (service.equals("addCart")) {
-                String id = request.getParameter("id");
-                //the first time product is selected
-                if (session.getAttribute(id) == null) {
-                    session.setAttribute(id, 1);
-                } else {
-                    int quantity = (Integer) session.getAttribute(id);
-                    int count = quantity + 1;
-                    //put count to session
-                    session.setAttribute(id, count);
+        }
+    }
+
+    private void handleListAll(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("showcart.jsp").forward(request, response);
+    }
+
+    private void handleAddCart(HttpServletRequest request, HttpSession session, HttpServletResponse response)
+            throws ServletException, IOException {
+        String id = request.getParameter("id");
+        if (session.getAttribute(id) == null) {
+            session.setAttribute(id, 1);
+        } else {
+            int quantity = (Integer) session.getAttribute(id);
+            int count = quantity + 1;
+            session.setAttribute(id, count);
+        }
+        request.getRequestDispatcher("showcart.jsp").forward(request, response);
+    }
+
+    private void handleUpdate(HttpServletRequest request, HttpSession session, HttpServletResponse response)
+            throws ServletException, IOException {
+        java.util.Enumeration em = session.getAttributeNames();
+        while (em.hasMoreElements()) {
+            String raw_id = em.nextElement().toString();
+            if (!raw_id.equals("account")) {
+                String raw_quantity = request.getParameter(raw_id);
+                int quantity = Integer.parseInt(raw_quantity);
+                session.setAttribute(raw_id, quantity);
+            }
+        }
+        response.sendRedirect("cart");
+    }
+
+    private void handleRemove(HttpServletRequest request, HttpSession session, HttpServletResponse response)
+            throws ServletException, IOException {
+        String id = request.getParameter("id");
+        String quantity_raw = request.getParameter("quantity");
+        java.util.Enumeration em = session.getAttributeNames();
+        if (id == null) {
+            while (em.hasMoreElements()) {
+                String raw_id = em.nextElement().toString();
+                if (!raw_id.equals("account")) {
+                    session.removeAttribute(raw_id);
                 }
-                request.getRequestDispatcher("showcart.jsp").forward(request, response);
             }
-            if (service.equals("update")) {
-                java.util.Enumeration em = session.getAttributeNames();
+        } else {
+            if (quantity_raw != null) {
                 while (em.hasMoreElements()) {
                     String raw_id = em.nextElement().toString();
                     if (!raw_id.equals("account")) {
-                        String raw_quantity = request.getParameter(raw_id);
-                        int quantity = Integer.parseInt(raw_quantity);
-                        session.setAttribute(raw_id, quantity);
-                    }
-                }
-                response.sendRedirect("cart");
-            }
-            if (service.equals("remove")) {
-                String id = request.getParameter("id");
-                String quantity_raw = request.getParameter("quantity");
-                java.util.Enumeration em = session.getAttributeNames();
-                //remove all
-                if (id == null) {
-                    while (em.hasMoreElements()) {
-                        String raw_id = em.nextElement().toString();
-                        if (!raw_id.equals("account")) {
-                            session.removeAttribute(raw_id); //remove all
+                        if (((int) session.getAttribute(raw_id)) == 1) {
+                            session.removeAttribute(raw_id);
                         }
                     }
-                } else {
-                    if (quantity_raw != null) {
-                        while (em.hasMoreElements()) {
-                            String raw_id = em.nextElement().toString();
-                            if (!raw_id.equals("account")) {
-                               //remove an element
-                                if(((int)session.getAttribute(raw_id))==1)
-                                    session.removeAttribute(raw_id); 
-                            }
-                        }
-                    } else {
-                        session.removeAttribute(id); //remove an element
-                    }
                 }
-                response.sendRedirect("cart");
-                //--
-
+            } else {
+                session.removeAttribute(id);
             }
         }
+        response.sendRedirect("cart");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
