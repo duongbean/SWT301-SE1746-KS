@@ -9,40 +9,40 @@ package entity;
  * @author huytu
  */
 public class Categories {
-    private int CategoryID;
-    private String CategoryName, Description;
+    private int categoryID;
+    private String categoryName, description;
 
     public Categories() {
     }
 
     public Categories(int CategoryID, String CategoryName, String Description) {
-        this.CategoryID = CategoryID;
-        this.CategoryName = CategoryName;
-        this.Description = Description;
+        this.categoryID = CategoryID;
+        this.categoryName = CategoryName;
+        this.description = Description;
     }
 
     public int getCategoryID() {
-        return CategoryID;
+        return categoryID;
     }
 
     public void setCategoryID(int CategoryID) {
-        this.CategoryID = CategoryID;
+        this.categoryID = CategoryID;
     }
 
     public String getCategoryName() {
-        return CategoryName;
+        return categoryName;
     }
 
     public void setCategoryName(String CategoryName) {
-        this.CategoryName = CategoryName;
+        this.categoryName = CategoryName;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String Description) {
-        this.Description = Description;
+        this.description = Description;
     }
 
     

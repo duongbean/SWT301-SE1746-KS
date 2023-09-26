@@ -73,7 +73,7 @@ public class AccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        final String loginPage = "login.jsp";
+        final String LOGINPAGE = "login.jsp";
         HttpSession session = request.getSession();
         DAOUsers dao = new DAOUsers();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -84,14 +84,14 @@ public class AccountServlet extends HttpServlet {
         if (service.equals("login")) {
             String submit = request.getParameter("submitlogin");
             if (submit == null) {
-                request.getRequestDispatcher(loginPage).forward(request, response);
+                request.getRequestDispatcher(LOGINPAGE).forward(request, response);
             } else {
                 String u = request.getParameter("username");
                 String p = request.getParameter("password");
                 Users a = dao.login(u, p);
                 if (a == null) {
                     request.setAttribute("error", "Invalid username or password!");
-                    request.getRequestDispatcher(loginPage).forward(request, response);
+                    request.getRequestDispatcher(LOGINPAGE).forward(request, response);
                 } else {
                     session.setAttribute("account", a);
                     response.sendRedirect("main");
@@ -131,7 +131,7 @@ public class AccountServlet extends HttpServlet {
                     Users user = new Users(id, c, u, p, phone, a, b, r);
                     dao.insert(user);
                     request.setAttribute("msg", "You have successfully registered. Please log in again.");
-                    request.getRequestDispatcher(loginPage).forward(request, response);
+                    request.getRequestDispatcher(LOGINPAGE).forward(request, response);
                 }
             }
         }

@@ -76,7 +76,7 @@ public class ProductServlet extends HttpServlet {
             String submitinsert = request.getParameter("submitinsert");
             if (submitinsert == null) {
                 List<Categories> list = daocat.getAll();
-                for (Categories i: list)
+//                for (Categories i: list)
                 request.setAttribute("listcat", list);
                 request.getRequestDispatcher("insertproduct.jsp").forward(request, response);
             } else {

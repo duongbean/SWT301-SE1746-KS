@@ -41,11 +41,14 @@ public class DAOOrders extends DBconnect {
 
     public ResultSet searchbyad(int id, String s) {
         String sql = "Select * from Orders where AdminID = '" + id + "'";
-        if (s != null) {
-            if (!s.equals("All")) {
-                sql += " and Status like '" + s + "'";
-            }
+        if (s != null && !s.equals("All")){
+            sql += " and Status like '" + s + "'";
         }
+//        if (s != null) {
+//            if (!s.equals("All")) {
+//                sql += " and Status like '" + s + "'";
+//            }
+//        }
         ResultSet rs = getData(sql);
         return rs;
     }
