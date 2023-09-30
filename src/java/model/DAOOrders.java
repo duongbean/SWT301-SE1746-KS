@@ -20,12 +20,13 @@ public class DAOOrders extends DBconnect {
 
     public void updatestatus(int or, String s) {
         String sql = "UPDATE [dbo].[Orders]\n"
-                + "   SET [Status] = '"+s+"'\n"
+                + "   SET [Status] = '" + s + "'\n"
                 + " WHERE [OrderID]=" + or;
         try {
             PreparedStatement pre = conn.prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
-        } catch (SQLException e) {}
+        } catch (SQLException e) {
+        }
     }
 
     public ResultSet searchbycus(int id, String s) {
@@ -38,13 +39,25 @@ public class DAOOrders extends DBconnect {
         ResultSet rs = getData(sql);
         return rs;
     }
+    
+    
+    //BEFORE
+//    public ResultSet searchbyad(int id, String s) {
+//        String sql = "Select * from Orders where AdminID = '" + id + "'";
+//        if (s != null) {
+//            if (!s.equals("All")) {
+//                sql += " and Status like '" + s + "'";
+//            }
+//        }
+//        ResultSet rs = getData(sql);
+//        return rs;
+//    }
 
+    //AFTER
     public ResultSet searchbyad(int id, String s) {
         String sql = "Select * from Orders where AdminID = '" + id + "'";
-        if (s != null) {
-            if (!s.equals("All")) {
-                sql += " and Status like '" + s + "'";
-            }
+        if ( (s!= null) && (!s.equals("All")) ) {
+            sql += " and Status like '" + s + "'";
         }
         ResultSet rs = getData(sql);
         return rs;

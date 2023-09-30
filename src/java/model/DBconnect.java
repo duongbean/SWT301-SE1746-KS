@@ -18,7 +18,19 @@ import java.util.logging.Logger;
  */
 public class DBconnect {
 
+    // BEFORE
     public Connection conn = null;
+
+    //AFTER
+    //private static Connection conn;
+    static {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            System.out.println("Driver loaded");
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public DBconnect(String url, String userName, String password) {
         try {
@@ -33,14 +45,35 @@ public class DBconnect {
         }
     }
 
+    //BEFORE
+//    public ResultSet getData(String sqlQuery) {
+//        ResultSet rs = null;
+//        Statement statement;
+//        try {
+//            statement = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+//            rs = statement.executeQuery(sqlQuery);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(DBconnect.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return rs;
+//    }
+    //AFTER
     public ResultSet getData(String sqlQuery) {
         ResultSet rs = null;
-        Statement statement;
+        Statement statement = null;
         try {
             statement = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             rs = statement.executeQuery(sqlQuery);
         } catch (SQLException ex) {
             Logger.getLogger(DBconnect.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(DBconnect.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         return rs;
     }

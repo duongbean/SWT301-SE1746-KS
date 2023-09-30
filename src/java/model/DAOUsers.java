@@ -149,8 +149,12 @@ public class DAOUsers extends DBconnect {
             pre.setString(6, u.getAddress());
             pre.setDate(7, u.getBirthDate());
             pre.setInt(8, u.getRole());
-            ResultSet rs = pre.executeQuery();
-
+            
+            //BEFORE
+            //ResultSet rs = pre.executeQuery();
+            
+            //AFTER
+            pre.executeQuery();
         } catch (SQLException e) {
         }
     }
